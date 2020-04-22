@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gatekeeper</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel='stylesheet' href="./css/styles.css">
+    <script src="./js/jquery-3.4.1.min.js"></script>
+    <script src="./js/chart.js"></script>
+    </script>
+</head>
+
+<body>
+    <div class="pagecontainer">
+        <div class="container-fluid">
+            <header>
+                <ul class="header_menu">
+                    <li class="burger_menu">
+                        <!-- <img src="./images/menu.png"> -->
+                        <?xml version="1.0" encoding="iso-8859-1"?>
+                        <!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+                        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 53 53"
+                            style="enable-background:new 0 0 53 53;" xml:space="preserve">
+                            <g>
+                                <g>
+                                    <path
+                                        d="M2,13.5h49c1.104,0,2-0.896,2-2s-0.896-2-2-2H2c-1.104,0-2,0.896-2,2S0.896,13.5,2,13.5z" />
+                                    <path
+                                        d="M2,28.5h49c1.104,0,2-0.896,2-2s-0.896-2-2-2H2c-1.104,0-2,0.896-2,2S0.896,28.5,2,28.5z" />
+                                    <path
+                                        d="M2,43.5h49c1.104,0,2-0.896,2-2s-0.896-2-2-2H2c-1.104,0-2,0.896-2,2S0.896,43.5,2,43.5z" />
+                                </g>
+                            </g>@tag:usesOnlineServices
+                            <g>@tag:usesOnlineServices
+                            </g>@tag:usesOnlineServices
+                            <g>@tag:usesOnlineServices
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                        </svg>
+                    </li>
+                    <li class="app_name">Gatekeeper</li>
+                    <li class="current_page">Dashboard</li>
+                </ul>
+            </header>
+
+            <section>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="side_menu">
+                            <ul>
+                                <li><a href="javascript:void(0)">Dashboard</a></li>
+                                <li><a href="./filereport.html">File Reports</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-10 menu_closed_col">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <br>
+                                <h4 class='text-center'>Total Files Processed</h4>
+                                <canvas id="processedFiles" width="100%" height="45%"></canvas>
+                            </div>
+                            <div class="col-md-6">
+                                <br>
+                                <h4 class='text-center'>Files Processed Per Day</h4>
+                                <canvas id="fileperday" width="100%" height="45%"></canvas>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <br>
+                                <h4 class='text-center'>Top Five Failure Reasons</h4>
+                                <canvas id="top5reasonsbarchart"></canvas>
+                            </div>
+                            <div class="col-md-6">
+                                <br>
+                                <h4 class='text-center'>Top Five Treasuries</h4>
+                                <canvas id="top5treasuriesbarchart"></canvas>
+                            </div>
+                        </div>
+                        <div class="failedfilesdetails">
+                        </div>
+                        <div class="seperator"></div>
+                    </div>
+                </div>
+
+            </section>
+
+            <footer>
+                <div class="copyright">
+                    <h4>&copy;PwC Government Blockchain Labs Bengaluru</h4>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <!-- 
+            <link href="https://fonts.googleapis.com/css?family=Lato|Raleway&display=swap" rel="stylesheet">
+    -->
+    <script>
+        function getFailedFiles(term, condition, title) {
+            console.log('CAme HERE')
+            $.ajax({
+                type: "POST",
+                url: "/failedfiles",
+                dataType: "json",
+                data: { 'term': term, 'condition': condition },
+                timeout: 2000,
+                success: function (data) {
+                    var details = `<div class='row'><h4 class='fileheader'>${title}</h4></div>`
+                    details += `<div class='row'><ul class='filedetailsheader'>`
+                    details += `<li>FILE_NAME</li>`;
+                    details += `<li>HASH</li>`;
+                    details += `<li>DATE</li>`;
+                    details += `<li>TIME</li>`;
+                    details += `<li>REASON</li>`;
+                    details += `<li>TREASURY_NAME</li>`;
+                    details += `</ul></div>`;
+                    for (var i = 0; i < data.length; i++) {
+                        details += `<div class='row'><ul class='filedetails'>`;
+                        details += `<li>${data[i].FILE_NAME}</li>`;
+                        details += `<li>${data[i].HASH}</li>`;
+                        details += `<li>${data[i].DATE}</li>`;
+                        details += `<li>${data[i].TIME}</li>`;
+                        details += `<li>${data[i].REASON}</li>`;
+                        details += `<li>${data[i].TREASURY_NAME}</li>`;
+                        details += `</ul></div>`;
+                    }
+                    $('.failedfilesdetails').html(details)
+                    $('.failedfilesdetails').addClass('add_gap_bottom')
+                },
+                error: function (jqXHR, textStatus, err) {
+                    //show error message
+                    console.log('text status ' + textStatus + ', err ' + err)
+                }
+            })
+            console.log('END HERE')
+        }
+        var pie = document.getElementById('processedFiles').getContext('2d');
+        var chart = new Chart(pie, {
+            type: 'pie',
+            data: {
+                labels: ['Passed', 'Failed'],
+                datasets: [{
+                    label: '',
+                    backgroundColor: ['rgb(255, 99, 132,.9)', 'rgb(157, 99, 132,.9)'],
+                    borderColor: 'rgb(147, 66, 132)',
+                    data: [0, 0]
+                }]
+            },
+            options: { responsive: true }
+        });
+
+        function updatePieChart(piechart, passed, failed) {
+            piechart.data.datasets[0].data[0] = passed
+            piechart.data.datasets[0].data[1] = failed
+            piechart.update();
+        }
+        var piechartupdatebegin = setInterval(() => {
+            $.ajax({
+                type: "POST",
+                url: "/totalFilesProcessed",
+                data: { 'passed': chart.data.datasets[0].data[0], 'failed': chart.data.datasets[0].data[1] },
+                dataType: "json",
+                timeout: 2000,
+                success: function (data) {
+                    updatePieChart(chart, data.passed, data.failed)
+                },
+                error: function (jqXHR, textStatus, err) {
+                    //show error message
+                    console.log('text status ' + textStatus + ', err ' + err)
+                }
+            })
+        }, 5000);
+        var fileperday = document.getElementById('fileperday').getContext('2d');
+
+        var fileperdayChart = new Chart(fileperday, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: '',
+                    backgroundColor: ['#AD1B02', '#D85604', '#E88D14', '#F3BE26'],
+                    borderColor: 'rgb(147, 66, 132)',
+                    data: []
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            drawOnChartArea: false,
+                            offsetGridLines: true
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            drawOnChartArea: false,
+                            offsetGridLines: true
+                        }
+                    }]
+                },
+                onClick: (evt) => {
+                    var firstPoint = reasonsChart.getElementAtEvent(evt)[0]
+                }
+            }
+        });
+        function updateFilesPerDayChart(fileperdaychart, data) {
+            fileperdaychart.data.labels = data.labels
+            fileperdaychart.data.datasets[0].data = data.data
+            fileperdaychart.update();
+        }
+        var reasonschartupdatebegin = setInterval(() => {
+            $.ajax({
+                type: "GET",
+                url: "/filesperday",
+                dataType: "json",
+                timeout: 2000,
+                success: function (data) {
+                    var labels_array = [], data_array = [];
+                    for (var i = 0; i < data.length; i++) {
+                        labels_array.push(data[i].DATE)
+                        data_array.push(data[i].day)
+                    }
+                    data_array.push(parseInt(data_array[0]) + 10)
+                    data_array.push(0)
+                    updateFilesPerDayChart(fileperdayChart, { labels: labels_array, data: data_array })
+                },
+                error: function (jqXHR, textStatus, err) {
+                    //show error message
+                    console.log('text status ' + textStatus + ', err ' + err)
+                }
+            })
+        }, 5000);
+        var topfivereasons = document.getElementById('top5reasonsbarchart').getContext('2d');
+        var reasonsChart = new Chart(topfivereasons, {
+            type: 'horizontalBar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: '',
+                    backgroundColor: ['#AD1B02', '#D85604', '#E88D14', '#F3BE26'],
+                    borderColor: 'rgb(147, 66, 132)',
+                    data: []
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            drawOnChartArea: false
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            drawOnChartArea: false
+                        }
+                    }]
+                },
+                onClick: (evt) => {
+                    var firstPoint = reasonsChart.getElementAtEvent(evt)[0]
+                    getFailedFiles('REASON', firstPoint._model.label, 'Files failed due to : ' + firstPoint._model.label);
+                }
+            }
+        });
+        function updateReasonsChart(topreasonsChart, data) {
+            topreasonsChart.data.labels = data.labels
+            topreasonsChart.data.datasets[0].data = data.data
+            topreasonsChart.update();
+        }
+        var reasonschartupdatebegin = setInterval(() => {
+            $.ajax({
+                type: "GET",
+                url: "/topreasons",
+                dataType: "json",
+                timeout: 2000,
+                success: function (data) {
+                    var labels_array = [], data_array = [];
+                    for (var i = 0; i < data.length; i++) {
+                        labels_array.push(data[i].reason)
+                        data_array.push(data[i].topreasons)
+                    }
+                    data_array.push(parseInt(data_array[0]) + 10)
+                    data_array.push(0)
+                    updateReasonsChart(reasonsChart, { labels: labels_array, data: data_array })
+                },
+                error: function (jqXHR, textStatus, err) {
+                    //show error message
+                    console.log('text status ' + textStatus + ', err ' + err)
+                }
+            })
+        }, 5000);
+        var topfivetreasuries = document.getElementById('top5treasuriesbarchart').getContext('2d');
+
+        var treasuryChart = new Chart(topfivetreasuries, {
+            type: 'horizontalBar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: '',
+                    backgroundColor: ['#AD1B02', '#D85604', '#E88D14', '#F3BE26'],
+                    borderColor: 'rgb(147, 66, 132)',
+                    data: []
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            drawOnChartArea: false
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            drawOnChartArea: false
+                        }
+                    }]
+                },
+                onClick: (evt) => {
+                    var firstPoint = treasuryChart.getElementAtEvent(evt)[0]
+                    getFailedFiles('TREASURY_NAME', firstPoint._model.label, 'Files failed at treasury : ' + firstPoint._model.label);
+                }
+            }
+        });
+        function updateTreasuriesChart(toptreasuireschart, data) {
+            toptreasuireschart.data.labels = data.labels
+            toptreasuireschart.data.datasets[0].data = data.data
+            toptreasuireschart.update();
+        }
+        var reasonschartupdatebegin = setInterval(() => {
+            $.ajax({
+                type: "GET",
+                url: "/toptreasuries",
+                dataType: "json",
+                timeout: 2000,
+                success: function (data) {
+                    var labels_array = [], data_array = [];
+                    for (var i = 0; i < data.length; i++) {
+                        labels_array.push(data[i].TREASURY_NAME)
+                        data_array.push(data[i].treasury)
+                    }
+                    data_array.push(parseInt(data_array[0]) + 10)
+                    data_array.push(0)
+                    updateTreasuriesChart(treasuryChart, { labels: labels_array, data: data_array })
+                },
+                error: function (jqXHR, textStatus, err) {
+                    //show error message
+                    console.log('text status ' + textStatus + ', err ' + err)
+                }
+            })
+        }, 5000);
+        $('.burger_menu').click(() => {
+            var parent = $('.side_menu').parent()
+            var grandparent = parent.parent();
+            if (parent.hasClass('menu_closed')) {
+                parent.removeClass('menu_closed')
+                grandparent.removeClass('menu_closed_full_width')
+                parent.show()
+            }
+            else {
+                parent.addClass('menu_closed')
+                grandparent.addClass('menu_closed_full_width')
+                parent.hide()
+            }
+        })
+    </script>
+
+</body>
+
+</html>

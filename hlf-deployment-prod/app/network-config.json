@@ -1,0 +1,49 @@
+{
+    "network_config": {
+        "orderer": {
+            "url": "grpcs://10.97.155.3:7050",
+            "server-hostname": "orderer0.example.com",
+            "tls_cacerts": "../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt"
+        },
+        "org1": {
+            "name": "peerOrg1",
+            "mspid": "Org1MSP",
+            "certificateAuthorities": {
+                "ca.example.com": {
+                    "url": "https://10.97.155.3:7054",
+                    "caName": "ca.example.com",
+                    "tlsCACerts": {
+                        "pem": "../crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem"
+                    },
+                    "httpOptions": {
+                        "verify": false
+                    }
+                }
+            },
+            "peers": {
+                "peer1": {
+                    "requests": "grpcs://10.97.155.2:7051",
+                    "events": "grpcs://10.97.155.2:7053",
+                    "server-hostname": "peer0.org1.example.com",
+                    "tls_cacerts": "../crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+                },
+                "peer2": {
+                    "requests": "grpcs://10.97.155.4:8051",
+                    "events": "grpcs://10.97.155.4:8053",
+                    "server-hostname": "peer1.org1.example.com",
+                    "tls_cacerts": "../crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
+                },
+                "peer3": {
+                    "requests": "grpcs://10.97.155.6:9051",
+                    "events": "grpcs://10.97.155.6:9053",
+                    "server-hostname": "peer1.org1.example.com",
+                    "tls_cacerts": "../crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
+                }
+            },
+            "admin": {
+                "key": "../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore",
+                "cert": "../crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts"
+            }
+        }
+    }
+}

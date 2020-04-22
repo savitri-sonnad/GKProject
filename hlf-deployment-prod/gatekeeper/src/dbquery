@@ -1,0 +1,58 @@
+    1. Query for Bill Approval status within 24 hours.
+
+SELECT 
+pa.PAYMENT_ID, 
+hdr.VOUCHER_DATE 
+FROM BL_HEADER_TXN hdr 
+join PA_PAYMENT_DTL_TXN pa on hdr.BL_ID = pa.PAYMENT_SRC_ID;
+
+
+    2. Query for Sanction Order association with the bill.
+
+SELECT 
+pa.PAYMENT_ID, 
+UPPER(bl.TAG_DOC_NO) AS SANCTION_ORDER_NO 
+FROM PA_PAYMENT_DTL_TXN pa 
+join BL_DOCS_TXN bl on pa.PAYMENT_SRC_ID = bl.BL_ID and bl.TAG_DOC_TYPE = 10200119;
+
+
+    3. Query for Treasury Officer approval and Treasury Account number check.
+
+SELECT 
+ppdt.PAYMENT_ID,
+ddo.DDO_CODE,
+mst.BL_STRING,
+dtl.OFFICE_SYSCD,
+dtl.NEFT_PYMNT_ACCNT_NO 
+FROM IFMS_DDO_MST ddo
+join IFMS_STKHLDR_BL_MPG stkhldr on ddo.DDO_SYSCD = stkhldr.ddo
+join IFMS_COA_LINE_ITEM_MST mst on stkhldr.COA_SYSCD = mst.COA_LINE_ITEM_SYSCODE
+join IFMS_TREASURY_DTL dtl on ddo.TREASURY_CODE = dtl.OFFICE_SYSCD
+join PA_PAYMENT_DTL_TXN ppdt on ddo.DDO_CODE = ppdt.DDO_CODE;
+
+
+    4. Query for Payment Amount and Benificiary Account Number.
+
+SELECT 
+blr.BL_ID,
+pmt.PAYMENT_ID,
+pmt.PMNT_AMT,
+blr.GROSS_AMOUNT,
+pmt.RCPNT_ID,
+pmt.RCPNT_NAME,
+mst.RECIPIENT_CODE,
+pmt.BANK_ACC_NO,
+pmt.BANK_NAME,
+pmt.IFSC_CODE 
+FROM PA_PAYMENT_DTL_TXN pmt
+join BL_RCPNT_TXN blr on pmt.BL_RCPNT_ID = blr.BL_RCPNT_ID  
+join IFMS_RECIPIENT_MST mst on blr.RCPNT_ID = mst.RECIPIENT_ID;
+
+
+    5. Query for Bill Approval details.
+
+
+SELECT DISTINCT pa.PAYMENT_ID,
+  hdr.VOUCHER_NO FROM BL_HEADER_TXN hdr
+  join PA_PAYMENT_DTL_TXN pa on hdr.BL_ID=pa.PAYMENT_SRC_ID ;
+  

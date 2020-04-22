@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Gatekeeper</title>
+        <link rel="stylesheet" href="./css/bootstrap.min.css">
+        <link rel='stylesheet' href="./css/styles.css">
+        <!--<link href="https://fonts.googleapis.com/css?family=Lato|Raleway&display=swap" rel="stylesheet">-->
+        <link rel="stylesheet" type="text/css" href="./css/daterangepicker.css" />
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/chart.js"></script>
+        <script type="text/javascript" src="./js/moment.min.js"></script>
+        <script type="text/javascript" src="./js/daterangepicker.js"></script>
+    </head>
+    <body>
+        <div class="pagecontainer">
+            <div class="container-fluid">
+                <header>
+                    <ul class="header_menu">
+                        <li class="burger_menu">
+                            <!-- <img src="./images/menu.png"> -->
+                            <?xml version="1.0" encoding="iso-8859-1"?>
+                            <!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+                            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                viewBox="0 0 53 53" style="enable-background:new 0 0 53 53;" xml:space="preserve">
+                            <g>
+                                <g>
+                                    <path d="M2,13.5h49c1.104,0,2-0.896,2-2s-0.896-2-2-2H2c-1.104,0-2,0.896-2,2S0.896,13.5,2,13.5z"/>
+                                    <path d="M2,28.5h49c1.104,0,2-0.896,2-2s-0.896-2-2-2H2c-1.104,0-2,0.896-2,2S0.896,28.5,2,28.5z"/>
+                                    <path d="M2,43.5h49c1.104,0,2-0.896,2-2s-0.896-2-2-2H2c-1.104,0-2,0.896-2,2S0.896,43.5,2,43.5z"/>
+                                </g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            </svg>
+                        </li>
+                        <li class="app_name">Gatekeeper</li>         
+                        <li class="current_page">File Reports</li>         
+                    </ul>
+                </header>
+
+                <section>
+                    <div class="row relative" style="min-height: 846px">
+                        <div class="col-md-2">
+                            <div class="side_menu">
+                                <ul>
+                                    <li><a href="/dashboard">Dashboard</a></li>
+                                    <li><a href="javascript:void(0)">File Reports</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-10 menu_closed_col">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="date_picker">
+                                        <input id='daterange' type="text" name="daterange" value="08/24/2019 - 08/26/2019" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="file_list_container">
+                                        <h3 class="page_title">Blockchain Data</h3>
+                                        <div class="file_container">
+                                            <ul class='payment_list_header'>
+                                                <li class="list_header">
+                                                    EndToEndId
+                                                </li>
+                                                <li class="list_header">
+                                                    Amount
+                                                </li>
+                                                <li class="list_header">
+                                                    Credit Id
+                                                </li>
+                                                <li class="list_header">
+                                                    Debit Id
+                                                </li>
+                                                <li class="list_header">
+                                                    Credit Date
+                                                </li>
+                                                <li class="list_header">
+                                                    Acknowledgement Status
+                                                </li>
+                                                <li class="list_header">
+                                                    Scroll Status
+                                                </li>
+                                            </ul>
+                                            <ul class="payment_list">
+                                            </ul>
+                                        </div>
+                                        <div class="pagination_container">
+                                            <ul class="pagination" data-page='1'>
+
+                                            </ul>
+                                            <input id="date_holder" type="hidden" data-startdate='' data-enddate="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br><br><br>
+                        </div>
+                    </div>
+                </section>
+                <footer>
+                        <div class="copyright">
+                            <h4>&copy;PwC Government Blockchain Labs Bengaluru</h4>
+                        </div>
+                </footer>
+            </div>
+        </div>
+        <script>
+            var pmtarray =[];
+            var totalpages;
+            // add pagination functionality
+            function implementPagination(page,totalitems){
+                totalpages = parseInt(totalitems/50);
+                if(totalitems%50 !=0)
+                    totalpages=parseInt(totalitems/50)+1;
+                var pagelist='';
+                var pagenumber = parseInt(page);
+                if(pagenumber == 1 && totalpages == 1){
+                    pagelist = `<li class='page'>1</li>`;
+                }
+                else if(pagenumber == 1){
+                    console.log('firstpage:'+pagenumber)
+                    pagelist += `<li class='page first_page disabled invisible'>first</li><li class='page previous_page invisible'>prev</li>`
+                    pagelist += `<li class='page current'>${pagenumber}</li>`
+                    pagelist += `<li class='page'>${pagenumber+1}</li>`
+                    pagelist += `<li class='page'>${pagenumber+2}</li>`
+                    pagelist += `<li class='page'>${pagenumber+3}</li>`
+                    pagelist += `<li class='page'>${pagenumber+4}</li>`
+                    pagelist += `<li class='page next_page'>next</li><li class='page last_page'>last</li>`
+                }
+                else if(totalpages<5){
+                    for(var i=1;i<=5;i++)
+                        pagelist += `<li class='page'>${i}</li>`
+                }
+                else if(pagenumber < 3){
+                    alert('<3 '+pagenumber)
+                    pagelist += `<li class='page first_page invisible'>first</li><li class='page previous_page invisible'>prev</li>`
+                    pagelist += `<li class='page current'>${pagenumber-1}</li>`
+                    pagelist += `<li class='page'>${pagenumber}</li>`
+                    pagelist += `<li class='page'>${pagenumber+1}</li>`
+                    pagelist += `<li class='page'>${pagenumber+2}</li>`
+                    pagelist += `<li class='page'>${pagenumber+3}</li>`
+                    pagelist += `<li class='page next_page'>next</li><li class='page last_page'>last</li>`
+                }
+                else if (pagenumber >=3 && pagenumber < (totalpages-2)){
+                        alert('PageNumber : '+pagenumber)
+                        pagelist += `<li class='page first_page'>first</li><li class='page previous_page'>prev</li>`
+                        pagelist += `<li class='page current'>${pagenumber-2}</li>`
+                        pagelist += `<li class='page'>${pagenumber-1}</li>`
+                        pagelist += `<li class='page'>${pagenumber}</li>`
+                        pagelist += `<li class='page'>${pagenumber+1}</li>`
+                        pagelist += `<li class='page'>${pagenumber+2}</li>`
+                        pagelist += `<li class='page next_page'>next</li><li class='page last_page'>last</li>`
+                }
+                else if (totalpages == pagenumber){
+                        console.log('lastpage',pagenumber)
+                        pagelist += `<li class='page first_page'>first</li><li class='page previous_page'>prev</li>`
+                        pagelist += `<li class='page'>${pagenumber-4}</li>`
+                        pagelist += `<li class='page'>${pagenumber-3}</li>`
+                        pagelist += `<li class='page current'>${pagenumber-2}</li>`
+                        pagelist += `<li class='page'>${pagenumber-1}</li>`
+                        pagelist += `<li class='page'>${pagenumber}</li>`
+                        pagelist += `<li class='page next_page invisible'>next</li><li class='page last_page disabled invisible'>last</li>`
+                }
+                else if(pagenumber+1 == totalpages){
+                        pagelist += `<li class='page first_page'>first</li><li class='page previous_page'>prev</li>`
+                        pagelist += `<li class='page'>${pagenumber-2}</li>`
+                        pagelist += `<li class='page'>${pagenumber-1}</li>`
+                        pagelist += `<li class='page current'>${pagenumber}</li>`
+                        pagelist += `<li class='page'>${pagenumber+1}</li>`
+                        pagelist += `<li class='page next_page invisible'>next</li><li class='page last_page invisible'>last</li>`
+                
+                }
+                else{
+                        pagelist += `<li class='page first_page'>first</li><li class='page previous_page'>prev</li>`
+                        pagelist += `<li class='page'>${pagenumber-2}</li>`
+                        pagelist += `<li class='page'>${pagenumber-1}</li>`
+                        pagelist += `<li class='page current'>${pagenumber}</li>`
+                        pagelist += `<li class='page'>${pagenumber+1}</li>`
+                        pagelist += `<li class='page next_page invisible'>next</li><li class='page last_page invisible'>last</li>`
+                }
+                $('.pagination').html('')               
+
+                $('.pagination').append(pagelist);
+            }
+            function updatePyamentList(page){
+                let valuesperpage = 50;
+                $('.payment_list').html('')
+                var paymentrow ='';
+                console.log(pmtarray[0])
+                for(var i=0;i<pmtarray.length;i++){
+                    if(pmtarray[i]!=null){
+                        var item = JSON.parse(pmtarray[i].value);
+                        paymentrow =`<li class='payment_details' data-row='${i+1}'>`;
+                        paymentrow+=`<div class='paymentitem'>${item.EndToEndId}</div>`
+                        paymentrow+=`<div class='paymentitem'>${item.Amt}</div>`
+                        paymentrow+=`<div class='paymentitem'>${item.CrdtId}</div>`
+                        paymentrow+=`<div class='paymentitem'>${item.DbtId}</div>`
+                        paymentrow+=`<div class='paymentitem'>${item.CreDt}</div>`
+                        paymentrow+=`<div class='paymentitem'>${item.Ack}</div>`
+                        paymentrow+=`<div class='paymentitem'>${item.Scroll}</div>`
+                        paymentrow+=`</li>`;
+                        $('.payment_list').append(paymentrow);
+                    }
+                    else{
+                        console.log("Undefined in data array at "+i)
+                        break
+                    }
+                }
+            }
+            function getBlockData(startdate,enddate,page){
+                $.ajax({
+                    type: "POST",
+                    url: "/paymentsinblock",
+                    dataType: "json",
+                    data:{startDate:startdate,endDate:enddate,pagenumber:page},
+                    timeout: 10*60*1000,
+                    success: function(data) {
+                        if(data.blockdata != undefined){
+                            alert('No data for selected date range')
+                            $('.pagination').html('');
+                            $('.payment_list').html('');
+                            }
+                        else{
+                            pmtarray = data.data;
+                            updatePyamentList(page)
+                            implementPagination(page,data.totalitems);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, err) {
+                        //show error message
+                        console.log('text status '+textStatus+', err '+err)
+                    }
+                })
+            }
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left'
+            }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
+                $("#date_holder").attr('data-startdate',start.format('DD-MM-YYYY'));
+                $("#date_holder").attr('data-enddate',end.format('DD-MM-YYYY'));
+                getBlockData(start.format('DD-MM-YYYY'),end.format('DD-MM-YYYY'),1)
+            });
+            $('.pagination').on('click','.page.first_page',function(e){
+                e.stopImmediatePropagation()
+                $('.pagination').attr('data-page',1)
+                getBlockData($("#date_holder").attr('data-startdate'),$("#date_holder").attr('data-enddate'),1)
+            });
+            $('.pagination').on('click','.page.last_page',function(e){
+                e.stopImmediatePropagation();
+                $('.pagination').attr('data-page',totalpages)
+                getBlockData($("#date_holder").attr('data-startdate'),$("#date_holder").attr('data-enddate'),totalpages)
+            });
+            $('.pagination').on('click','.page.next_page',function(e){
+                e.stopImmediatePropagation()
+                var page=parseInt($('.pagination').attr('data-page'))+1; 
+                $('.pagination').attr('data-page',page)
+                getBlockData($("#date_holder").attr('data-startdate'),$("#date_holder").attr('data-enddate'),page)
+            });
+            $('.pagination').on('click','.page.previous_page',function(e){
+                e.stopImmediatePropagation()
+                var page=parseInt($('.pagination').attr('data-page')) - 1; 
+                $('.pagination').attr('data-page',page)
+                getBlockData($("#date_holder").attr('data-startdate'),$("#date_holder").attr('data-enddate'),page)
+            });
+            $('.pagination').on('click','.page',function(){
+                var page=parseInt($(this).html());
+                $('.pagination').attr('data-page',page)
+                getBlockData($("#date_holder").attr('data-startdate'),$("#date_holder").attr('data-enddate'),page)
+            });
+            $('.burger_menu').click(() => {
+            var parent = $('.side_menu').parent()
+            var grandparent = parent.parent();
+            if (parent.hasClass('menu_closed')) {
+                parent.removeClass('menu_closed')
+                grandparent.removeClass('menu_closed_full_width')
+                parent.show()
+            }
+            else {
+                parent.addClass('menu_closed')
+                grandparent.addClass('menu_closed_full_width')
+                parent.hide()
+            }
+        })
+        </script>
+    </body>
+</html>

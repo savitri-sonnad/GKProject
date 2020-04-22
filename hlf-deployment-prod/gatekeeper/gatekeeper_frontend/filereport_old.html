@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Gatekeeper</title>
+        <link rel="stylesheet" href="./css/bootstrap.min.css">
+        <link rel='stylesheet' href="./css/styles.css">
+        <!--<link href="https://fonts.googleapis.com/css?family=Lato|Raleway&display=swap" rel="stylesheet">-->
+        <link rel="stylesheet" type="text/css" href="./css/daterangepicker.css" />
+        <script src="./js/jquery-3.4.1.min.js"></script>
+        <script src="./js/chart.js"></script>
+        <script type="text/javascript" src="./js/moment.min.js"></script>
+        <script type="text/javascript" src="./js/daterangepicker.js"></script>
+    </head>
+    <body>
+        <div class="pagecontainer">
+            <div class="container-fluid">
+                <header>
+                    <ul class="header_menu">
+                        <li class="burger_menu">
+                            <!-- <img src="./images/menu.png"> -->
+                            <?xml version="1.0" encoding="iso-8859-1"?>
+                            <!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+                            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                viewBox="0 0 53 53" style="enable-background:new 0 0 53 53;" xml:space="preserve">
+                            <g>
+                                <g>
+                                    <path d="M2,13.5h49c1.104,0,2-0.896,2-2s-0.896-2-2-2H2c-1.104,0-2,0.896-2,2S0.896,13.5,2,13.5z"/>
+                                    <path d="M2,28.5h49c1.104,0,2-0.896,2-2s-0.896-2-2-2H2c-1.104,0-2,0.896-2,2S0.896,28.5,2,28.5z"/>
+                                    <path d="M2,43.5h49c1.104,0,2-0.896,2-2s-0.896-2-2-2H2c-1.104,0-2,0.896-2,2S0.896,43.5,2,43.5z"/>
+                                </g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            <g>
+                            </g>
+                            </svg>
+                        </li>
+                        <li class="app_name">Gatekeeper</li>         
+                        <li class="current_page">File Reports</li>         
+                    </ul>
+                </header>
+
+                <section>
+                    <div class="row relative" style="min-height: 846px">
+                        <div class="col-md-2">
+                            <div class="side_menu">
+                                <ul>
+                                    <li><a href="./dashboard.html">Dashboard</a></li>
+                                    <li><a href="javascript:void(0)">File Reports</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-10 menu_closed_col">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="date_picker">
+                                        <input id='daterange' type="text" name="daterange" value="08/01/2019 - 08/14/2019" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="file_list_container">
+                                        <h3 class="page_title">Blockchain Data</h3>
+                                        <div class="file_container">
+                                            <ul class='payment_list_header'>
+                                                <li class="list_header">
+                                                    EndToEndId
+                                                </li>
+                                                <li class="list_header">
+                                                    Amount
+                                                </li>
+                                                <li class="list_header">
+                                                    Credit Id
+                                                </li>
+                                                <li class="list_header">
+                                                    Debit Id
+                                                </li>
+                                                <li class="list_header">
+                                                    Credit Date
+                                                </li>
+                                                <li class="list_header">
+                                                    Acknowledgement Status
+                                                </li>
+                                                <li class="list_header">
+                                                    Scroll Status
+                                                </li>
+                                            </ul>
+                                            <ul class="payment_list">
+                                            </ul>
+                                        </div>
+                                        <div class="pagination_container">
+                                            <ul class="pagination">
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br><br><br>
+                        </div>
+                    </div>
+                </section>
+                <footer>
+                        <div class="copyright">
+                            <h4>&copy;PwC Government Blockchain Labs Bengaluru</h4>
+                        </div>
+                </footer>
+            </div>
+        </div>
+        <script>
+            // add pagination functionality
+            function implementPagination(){
+
+            }
+            function updatePyamentList(data,page){
+                let startindex = (page - 1) * 50;
+                // console.log(startindex)
+                console.log(data[0].value)
+                let valuesperpage = 50;
+                if(data.length < 50){
+                    valuesperpage = data.length;
+                    startindex = 0;
+                }
+                else if(startindex < (data.length % valuesperpage))
+                    valuesperpage = data.length % valuesperpage;
+                $('.payment_list').html('')
+                var paymentrow ='';
+                for(var i=startindex;i<(startindex + valuesperpage);i++){
+                    var item = JSON.parse(data[i].value);
+                    console.log(data.length)
+                    paymentrow =`<li class='payment_details' data-row='${i+1}'>`;
+                    paymentrow+=`<div class='paymentitem'>${item.EndToEndId}</div>`
+                    paymentrow+=`<div class='paymentitem'>${item.Amt}</div>`
+                    paymentrow+=`<div class='paymentitem'>${item.CrdtId}</div>`
+                    paymentrow+=`<div class='paymentitem'>${item.DbtId}</div>`
+                    paymentrow+=`<div class='paymentitem'>${item.CreDt}</div>`
+                    paymentrow+=`<div class='paymentitem'>${item.Ack}</div>`
+                    paymentrow+=`<div class='paymentitem'>${item.Scroll}</div>`
+                    paymentrow+=`</li>`;
+                    $('.payment_list').append(paymentrow);
+                    console.log('ROW=> ' +paymentrow)
+                }
+            }
+            // var updatepaymentlist = setTimeout(()=>{
+                // $.ajax({
+                //     type: "GET",
+                //     url: "/paymentsinblock",
+                //     dataType: "json",
+                //     timeout: 2000,
+                //     success: function(data) {
+                //         updatePyamentList(data,2)
+                //     },
+                //     error: function(jqXHR, textStatus, err) {
+                //         //show error message
+                //         alert.log('text status '+textStatus+', err '+err)
+                //     }
+                // })
+            // },1000);
+            $('input[name="daterange"]').daterangepicker({
+                opens: 'left'
+            }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                $.ajax({
+                    type: "GET",
+                    url: "/paymentsinblock",
+                    dataType: "json",
+                    timeout: 2000,
+                    success: function(data) {
+                        updatePyamentList(data,2)
+                    },
+                    error: function(jqXHR, textStatus, err) {
+                        //show error message
+                        alert.log('text status '+textStatus+', err '+err)
+                    }
+                })
+            });
+        </script>
+    </body>
+</html>
